@@ -1,0 +1,157 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+/*
+	최대한 많은 core에 전원을 연결하여 전원 길이합의 최소값
+	서로 연결하는 것이 아니라 가장자리에 연결
+	연결 안되는 core 존재 가능
+	코어 갯수 1~12 배열 사용하여 한쪽으로 쭉 연결
+
+
+*/
+int arr[12][12] = { 0, };
+int dx[4] = { 1,-1,0,0 };
+int dy[4] = { 0,0,1,-1 };
+int n, m;
+const int INF = 987654321;
+int end_r = 0;
+int end_c = 0;
+//모든 1노드가 원하는 방향으로 쭉 가보고 
+//최대한 많게 연결하는 전선길이의 합인데 여러 방법이 있을 경우
+//최솟값
+// 1,1 부터 n-2,n-2까지 검사하면 됨
+int cntnode = 0;
+int cntedge = INF;
+bool calc_range(int x, int y)
+{
+	if (x >= 0 && x < n && y >= 0 && y < n)
+		return true;
+	return false;
+
+}
+bool chk_good(int x, int y, int dir)
+{
+	//해당 방향으로 쭉 이동했을 때 전부 0인가?
+	int mov_x = x + dx[dir];
+	int mov_y = y + dy[dir];
+	while (calc_range(mov_x, mov_y))
+	{
+		if (arr[mov_x][mov_y])
+			return false;
+		mov_x += dx[dir];
+		mov_y += dy[dir];
+	}
+	return true;
+	//전선은 -1로 하기
+
+}
+void calc_dfs(int selected, int bridge_num, int tmp[12][12],int start_r,int start_c)
+{
+	//선택한 노드의 깊이, 선택되고 연결된 수, 전선의 길이
+	//놓거나 아예 안놓고 가거나
+	if (start_r>=end_r&& start_c>=end_c+1)
+	{
+		//끝까지 다 해봤음 
+		//다 해본걸 어떻게 아나
+		if (selected >= cntnode && bridge_num != 0)
+		{
+			cntnode = selected;
+			cntedge = min(bridge_num, cntedge);
+		}
+
+		return;
+	}
+	for (int r = start_r; r < n - 1; r++)
+	{
+		if (r > start_r) start_c = 0;
+		for (int c = start_c; c < n - 1; c++)
+		{
+			if (tmp[r][c] == 1)
+			{
+				//안놓고 가기
+				//visited[r][c] = 1;
+				//calc_dfs(depth + 1, selected, bridge_num, tmp);
+				//안놓고 가는거 생각할 필요가 없음 ->여기서 다 커버 가능 
+				for (int d = 0; d < 4; d++)
+				{
+					int prev[12][12] = { 0, };
+
+					if (chk_good(r, c, d))
+					{
+						//이때 다 전선 수 -1로 한 뒤 넘기기
+						for (int i = 0; i < n; i++)
+							for (int j = 0; j < n; j++)
+								prev[i][j] = tmp[i][j];
+						int mov_x = r + dx[d];
+						int mov_y = c + dy[d];
+						int cnt = 0;
+						//최소1임
+						while (calc_range(mov_x, mov_y))
+						{
+							cnt++;
+							tmp[mov_x][mov_y] = -1;
+							mov_x += dx[d];
+							mov_y += dy[d];
+						}
+
+						int de = 1;
+						calc_dfs( selected + 1, bridge_num + cnt, tmp,r,c+1);
+						for (int i = 0; i < n; i++)
+							for (int j = 0; j < n; j++)
+								tmp[i][j] = prev[i][j];
+
+
+					}
+
+
+
+				}
+				//visited[r][c] = 0;
+
+			}
+
+
+		}
+
+
+	}
+	return;
+
+}
+int main()
+{
+	int t;
+	cin >> t;
+	for (int tc = 1; tc <= t; tc++)
+	{
+		cin >> n;
+		m = 0;
+		cntnode = 0;
+		cntedge = INF;
+		for (int r = 0; r < n; r++)
+			for (int c = 0; c < n; c++)
+				cin >> arr[r][c];
+		end_r = 0;
+		end_c = 0;
+		for (int r = 1; r < n - 1; r++)
+		{
+			for (int c = 1; c < n - 1; c++)
+			{
+				if (arr[r][c])
+				{
+					m++;
+					if (end_r <= r)
+					{
+						end_r = r;
+						end_c = c;
+					}
+				}
+			}
+		}
+		calc_dfs( 0, 0, arr,1,1);
+		cout << "#" << tc << ' ' << cntedge << '\n';
+	}
+
+
+}
