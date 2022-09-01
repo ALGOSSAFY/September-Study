@@ -19,19 +19,19 @@ int visited[4][4] = { 0, };
 void findword(int y, int x, int idx, int cnt) {
     if (v[idx][cnt] == '\0') {
         tempcnt = 1;
-        if (MAX <= cnt) {
+        if (MAX == -987654321) {
             MAX = cnt;
-            if (MAX == cnt) {
-                if (MAX_word>v[idx]) {
-                    MAX_word = v[idx];
-                }
-                else {
-                    MAX_word = v[idx];
-                }
-            }
-            else {
+            MAX_word = v[idx];
+        }
+        else if (MAX == cnt) {
+            if (MAX_word > v[idx]) {
+                MAX = cnt;
                 MAX_word = v[idx];
             }
+        }
+        else if (MAX < cnt) {
+            MAX = cnt;
+            MAX_word = v[idx];
         }
         if (cnt == 3 || cnt == 4) {
             score = 1;
