@@ -8,9 +8,10 @@ using namespace std;
 int T, N;
 
 int answer;
-
+int length;
 int field[13][13];
-
+int maxConnected = 0;
+int Connected;
 struct loc {
 	int y, x;
 	int dir[5];
@@ -18,7 +19,7 @@ struct loc {
 	//   0 : up , 1: down , 2 : left , 3 : right ,   4  : pass
 };
 
-void dfs(int curindex, int totalindex, vector <loc> chipdata);
+void dfs(int curindex, int totalchipN, vector <loc> chipdata);
 
 
 int main() {
@@ -36,7 +37,9 @@ int main() {
 		int DAT_left[13] = { 0, };
 		int DAT_right[13] = { 0, };
 		int chipN = 0;
-		int maxChipN = 0;
+		maxConnected = 0;
+		Connected = 0;
+		length = 0;
 		answer = 300; // 칩 갯수 20개, 맵 사이즈 12, 최대 길이 240 보다 큰 300으로 설정
 
 		for (int y = 1; y <= N; y++) {
@@ -47,8 +50,7 @@ int main() {
 					chiplocs.push_back({ y,x });
 
 					// struct 좌표 잘 들어가는지. int[5] 배열 정상적으로 초기화 되어서 출력되는지 확인
-					cout << chiplocs.back().y << " " << chiplocs.back().x << " " << chiplocs.back().dir[0] << "\n";
-
+					//cout << chiplocs.back().y << " " << chiplocs.back().x << " " << chiplocs.back().dir[0] << "\n";
 					if (!DAT_up[x])
 						DAT_up[x] = y;
 
@@ -79,27 +81,19 @@ int main() {
 			int flag = 1;
 
 			if (cy == DAT_up[cx]) {
-				chiplocs[i].dir[0] = 1;
-				flag = 0;
+				chiplocs[i].dir[0] = 1; flag = 0;
 			}
-
 
 			if (cy + DAT_down[cx] - 1 == N) {
-				chiplocs[i].dir[1] = 1;
-				flag = 0;
+				chiplocs[i].dir[1] = 1; flag = 0;
 			}
-
 
 			if (cx == DAT_left[cy]) {
-				chiplocs[i].dir[2] = 1;
-				flag = 0;
+				chiplocs[i].dir[2] = 1; flag = 0;
 			}
 
-
-
 			if (cx + DAT_right[cy] - 1 == N) {
-				chiplocs[i].dir[3] = 1;
-				flag = 0;
+				chiplocs[i].dir[3] = 1; flag = 0;
 			}
 			//4개 다 해당되지 않는다 -> 가망이 없는 칩이다 버리자.
 			if (flag) {
@@ -115,7 +109,7 @@ int main() {
 		//이제 dfs 돌리면 된다~!
 
 
-
+		dfs(0, chipN, chiplocs);
 
 
 		cout << "#" << TC << " " << answer << "\n";
@@ -130,3 +124,175 @@ int main() {
 
 
 
+void dfs(int curindex, int totalchipN, vector <loc> chipdata) {
+
+	if ((Connected + totalchipN - curindex) < maxConnected)
+		return;
+
+	if (curindex == totalchipN) {
+		if (maxConnected == Connected) {
+			if (answer > length)
+				answer = length;
+		}
+		else if (maxConnected < Connected) {
+			maxConnected = Connected;
+			answer = length;
+		}
+		return;
+	}
+	loc curchip = chipdata[curindex];
+	int cury = curchip.y;
+	int curx = curchip.x;
+	int possible_up = curchip.dir[0];
+	int possible_down = curchip.dir[1];
+	int possible_left = curchip.dir[2];
+	int possible_right = curchip.dir[3];
+
+	//   0 : up , 1: down , 2 : left , 3 : right
+
+	// up
+	if (possible_up) {
+		bitset<13> up_temp_2 = 0;
+		bitset<13> up_temp_3 = 0;
+		Connected++;
+		length += cury - 1;
+		for (int i = curindex + 1; i < totalchipN; i++) {
+			if (cury < chipdata[i].y) {
+				continue;
+			}
+			else {
+				if (curx < chipdata[i].x && chipdata[i].dir[2]) {
+					up_temp_2[i] = 1;
+					chipdata[i].dir[2] = 0;
+				}
+				if (chipdata[i].x < curx && chipdata[i].dir[3]) {
+					up_temp_3[i] = 1;
+					chipdata[i].dir[3] = 0;
+				}
+			}
+		}
+		dfs(curindex + 1, totalchipN, chipdata);
+
+		for (int i = curindex; i < 13; i++) {
+			if (up_temp_2[i])
+				chipdata[i].dir[2] = 1;
+			if (up_temp_3[i])
+				chipdata[i].dir[3] = 1;
+		}
+
+		Connected--;
+		length -= cury - 1;
+	}
+
+	//down
+	if (possible_down) {
+		bitset<13> down_temp_2 = 0;
+		bitset<13> down_temp_3 = 0;
+		Connected++;
+		length += (N - cury);
+		for (int i = curindex + 1; i < totalchipN; i++) {
+			if (cury > chipdata[i].y) {
+				continue;
+			}
+			else {
+				if (curx < chipdata[i].x && chipdata[i].dir[2]) {
+					down_temp_2[i] = 1;
+					chipdata[i].dir[2] = 0;
+				}
+				if (chipdata[i].x < curx && chipdata[i].dir[3]) {
+					down_temp_3[i] = 1;
+					chipdata[i].dir[3] = 0;
+				}
+			}
+		}
+		dfs(curindex + 1, totalchipN, chipdata);
+
+		for (int i = curindex; i < 13; i++) {
+			if (down_temp_2[i])
+				chipdata[i].dir[2] = 1;
+			if (down_temp_3[i])
+				chipdata[i].dir[3] = 1;
+		}
+
+		Connected--;
+		length -= (N - cury);
+	}
+
+
+
+	if (possible_left) {
+		bitset<13> left_temp_0 = 0;
+		bitset<13> left_temp_1 = 0;
+		Connected++;
+		length += (curx - 1);
+		for (int i = curindex + 1; i < totalchipN; i++) {
+			loc next = chipdata[i];
+			if (curx < next.x) {
+				continue;
+			}
+			else {
+				if (next.y > cury && chipdata[i].dir[0]) {
+					left_temp_0[i] = 1;
+					chipdata[i].dir[0] = 0;
+				}
+				if (next.y < cury && chipdata[i].dir[1]) {
+					left_temp_1[i] = 1;
+					chipdata[i].dir[1] = 0;
+				}
+			}
+		}
+		dfs(curindex + 1, totalchipN, chipdata);
+
+		for (int i = curindex; i < 13; i++) {
+			if (left_temp_0[i])
+				chipdata[i].dir[0] = 1;
+			if (left_temp_1[i])
+				chipdata[i].dir[1] = 1;
+		}
+		Connected--;
+		length -= (curx - 1);
+	}
+
+
+	if (possible_right) {
+		bitset<13> right_temp_0 = 0;
+		bitset<13> right_temp_1 = 0;
+		Connected++;
+		length += (N - curx);
+		for (int i = curindex + 1; i < totalchipN; i++) {
+			loc next = chipdata[i];
+			if (curx > next.x) {
+				continue;
+			}
+			else {
+				if (next.y > cury && chipdata[i].dir[0]) {
+					right_temp_0[i] = 1;
+					chipdata[i].dir[0] = 0;
+				}
+				if (next.y < cury && chipdata[i].dir[1]) {
+					right_temp_1[i] = 1;
+					chipdata[i].dir[1] = 0;
+				}
+			}
+		}
+		dfs(curindex + 1, totalchipN, chipdata);
+
+		for (int i = curindex; i < 13; i++) {
+			if (right_temp_0[i])
+				chipdata[i].dir[0] = 1;
+			if (right_temp_1[i])
+				chipdata[i].dir[1] = 1;
+		}
+		Connected--;
+		length -= (N - curx);
+	}
+
+
+
+	//pass
+
+	dfs(curindex + 1, totalchipN, chipdata);
+
+
+
+}
