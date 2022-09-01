@@ -9,7 +9,7 @@ int T, N;
 
 int answer;
 
-int field[12][12];
+int field[13][13];
 
 struct loc {
 	int y, x;
@@ -31,33 +31,33 @@ int main() {
 		// ------- TC 시작 후 초기화 --------- 
 		vector <loc> chiplocs;
 
-		int DAT_up[12] = { 0, };
-		int DAT_down[12] = { 0, };
-		int DAT_left[12] = { 0, };
-		int DAT_right[12] = { 0, };
+		int DAT_up[13] = { 0, };
+		int DAT_down[13] = { 0, };
+		int DAT_left[13] = { 0, };
+		int DAT_right[13] = { 0, };
 		int chipN = 0;
 		int maxChipN = 0;
 		answer = 300; // 칩 갯수 20개, 맵 사이즈 12, 최대 길이 240 보다 큰 300으로 설정
 
-		for (int y = 0; y < N; y++) {
-			for (int x = 0; x < N; x++) {
+		for (int y = 1; y <= N; y++) {
+			for (int x = 1; x <= N; x++) {
 				cin >> field[y][x];
 				if (field[y][x]) {
 					chipN++;
 					chiplocs.push_back({ y,x });
 
 					// struct 좌표 잘 들어가는지. int[5] 배열 정상적으로 초기화 되어서 출력되는지 확인
-					//cout << chiplocs.back().y << " " << chiplocs.back().x << " " << chiplocs.back().dir[0] << "\n";
+					cout << chiplocs.back().y << " " << chiplocs.back().x << " " << chiplocs.back().dir[0] << "\n";
 
 					if (!DAT_up[x])
 						DAT_up[x] = y;
 
-					DAT_down[x] = N - y;
+					DAT_down[x] = N - y + 1;
 
 					if (!DAT_left[y])
 						DAT_left[y] = x;
 
-					DAT_right[y] = N - x;
+					DAT_right[y] = N - x + 1;
 
 				}
 			}
@@ -70,7 +70,7 @@ int main() {
 
 			//dir info
 			//   0 : up , 1: down , 2 : left , 3 : right ,   4  : pass
-			if (cy == 0 || cy == N - 1 || cx == 0 || cx == N - 1) {
+			if (cy == 1 || cy == N || cx == 1 || cx == N) {
 				chiplocs.erase(chiplocs.begin() + i);
 				i--, chipN--;
 				continue;
@@ -84,7 +84,7 @@ int main() {
 			}
 
 
-			if (cy + DAT_down[cx] + 1 == N) {
+			if (cy + DAT_down[cx] - 1 == N) {
 				chiplocs[i].dir[1] = 1;
 				flag = 0;
 			}
@@ -97,7 +97,7 @@ int main() {
 
 
 
-			if (cx + DAT_right[cy] + 1 == N) {
+			if (cx + DAT_right[cy] - 1 == N) {
 				chiplocs[i].dir[3] = 1;
 				flag = 0;
 			}
