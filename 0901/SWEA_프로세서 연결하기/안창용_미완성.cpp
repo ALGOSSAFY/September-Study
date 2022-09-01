@@ -1,9 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <stack>
 #include <algorithm>
-
+#include <bitset>
 using namespace std;
 
 
@@ -15,7 +13,7 @@ int field[12][12];
 
 struct loc {
 	int y, x;
-	int dir[5]; 
+	int dir[5];
 	// 0~3 연결 가능성, 4 는 함수용 패스 옵션추가
 	//   0 : up , 1: down , 2 : left , 3 : right ,   4  : pass
 };
@@ -44,13 +42,13 @@ int main() {
 		for (int y = 0; y < N; y++) {
 			for (int x = 0; x < N; x++) {
 				cin >> field[y][x];
-				if (field[y][x]){
+				if (field[y][x]) {
 					chipN++;
 					chiplocs.push_back({ y,x });
 
 					// struct 좌표 잘 들어가는지. int[5] 배열 정상적으로 초기화 되어서 출력되는지 확인
 					//cout << chiplocs.back().y << " " << chiplocs.back().x << " " << chiplocs.back().dir[0] << "\n";
-					
+
 					if (!DAT_up[x])
 						DAT_up[x] = y;
 
@@ -72,31 +70,31 @@ int main() {
 
 			//dir info
 			//   0 : up , 1: down , 2 : left , 3 : right ,   4  : pass
-			if (cy == 1 || cy == N - 1 || cx == 1 || cx == N - 1) {
+			if (cy == 0 || cy == N - 1 || cx == 0 || cx == N - 1) {
 				chiplocs.erase(chiplocs.begin() + i);
 				i--, chipN--;
 				continue;
 			} // 테두리에 있는 애들 삭제. dat 연결 가능 여부 체크하면 영향 X
-				
+
 			int flag = 1;
 
 			if (cy == DAT_up[cx]) {
 				chiplocs[i].dir[0] = 1;
 				flag = 0;
 			}
-				
+
 
 			if (cy + DAT_down[cx] + 1 == N) {
 				chiplocs[i].dir[1] = 1;
 				flag = 0;
 			}
-				
+
 
 			if (cx == DAT_left[cy]) {
 				chiplocs[i].dir[2] = 1;
 				flag = 0;
 			}
-				
+
 
 
 			if (cx + DAT_right[cy] + 1 == N) {
