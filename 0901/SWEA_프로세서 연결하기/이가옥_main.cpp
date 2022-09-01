@@ -1,11 +1,3 @@
-// testcase 49/50 
-// 0 0 0 0 0
-// 0 1 1 1 0
-// 0 1 1 1 0
-// 0 1 1 1 0
-// 0 0 0 0 0
-// 이 부분에서 vector error 발생 => 이유 못찾겠음.....ㅜㅜ
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -89,13 +81,13 @@ void dfs(int idx, int coreCnt, int lineSum, int powerCnt) {
 
 	}
 
+	// 남은 코어의 수보다 이미 연결된 코어의 수가 더 크다면 연결안된 경우 굳이 돌려보지 않음!
+	if (cores.size() - coreCnt < powerCnt) return;
+
+
 	// 전원 연결이 되지 않은 코어가 존재할 수 있음!
-	// 전원에 연결된 코어가 최대여야 하므로, 
-	// 굳이 코어의 수가 1이상일때 코어가 연결안되는 경우를 고려할 필요 X
-	if (coreCnt < 1) {
-		dfs(idx + 1, coreCnt + 1, lineSum, powerCnt);
-	}
-	
+	dfs(idx + 1, coreCnt + 1, lineSum, powerCnt);
+
 }
 
 
