@@ -27,5 +27,5 @@
 
 [프로그래머스 모음 사전](https://school.programmers.co.kr/learn/courses/30/lessons/84512?language=cpp)
 
-### 선택
+#### 선택
 [알고스팟 PICNIC](https://algospot.com/judge/problem/read/PICNIC)
