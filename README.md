@@ -29,3 +29,13 @@
 
 #### 선택
 [알고스팟 PICNIC](https://algospot.com/judge/problem/read/PICNIC)
+
+##   09-22(카카오 기출)
+
+[프로그래머스 양궁대회](https://school.programmers.co.kr/learn/courses/30/lessons/92342)
+
+[프로그래머스 사라지는 발판](https://school.programmers.co.kr/learn/courses/30/lessons/92345)
+
+[프로그래머스 등산코스 정하기](https://school.programmers.co.kr/learn/courses/30/lessons/118669)
+
+[프로그래머스 광고 삽입](https://school.programmers.co.kr/learn/courses/30/lessons/118669)
