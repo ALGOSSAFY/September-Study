@@ -38,4 +38,4 @@
 
 [프로그래머스 등산코스 정하기](https://school.programmers.co.kr/learn/courses/30/lessons/118669)
 
-[프로그래머스 광고 삽입](https://school.programmers.co.kr/learn/courses/30/lessons/118669)
+[프로그래머스 광고 삽입](https://school.programmers.co.kr/learn/courses/30/lessons/72414)
