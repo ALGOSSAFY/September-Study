@@ -39,3 +39,14 @@
 [프로그래머스 등산코스 정하기](https://school.programmers.co.kr/learn/courses/30/lessons/118669)
 
 [프로그래머스 광고 삽입](https://school.programmers.co.kr/learn/courses/30/lessons/72414)
+
+##   09-29(종만북)
+
+[알고스팟 BOARDCOVER](https://algospot.com/judge/problem/read/BOARDCOVER)
+
+[알고스팟 CLOCKSYNC](https://algospot.com/judge/problem/read/CLOCKSYNC)
+
+[알고스팟 QUADTREE](https://algospot.com/judge/problem/read/QUADTREE)
+
+[알고스팟 FENCE](https://algospot.com/judge/problem/read/FENCE)
+
